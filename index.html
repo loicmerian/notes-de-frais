@@ -8,7 +8,7 @@
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon-192.png" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <script type="module" crossorigin src="/notes-de-frais/index-CZaozLhX.js"></script>
+  <script type="module" crossorigin src="/notes-de-frais/index-Bkrisl15.js"></script>
   <link rel="stylesheet" crossorigin href="/notes-de-frais/index-DG_hAkIK.css">
 </head>
 <body>
@@ -39,6 +39,10 @@
       <div id="bandeau-clos" class="bandeau" hidden></div>
       <ul id="liste" class="liste"></ul>
       <p id="liste-vide" class="vide" hidden>Aucune dépense pour ce mois.</p>
+      <div id="bloc-orphelins" hidden>
+        <p class="alerte">Justificatifs enregistrés dans OneDrive mais absents de la liste :</p>
+        <ul id="orphelins" class="liste"></ul>
+      </div>
       <div class="actions-mois">
         <button id="btn-excel" class="secondaire">Télécharger l'Excel</button>
         <button id="btn-cloturer" class="secondaire danger">Clôturer et envoyer au comptable</button>
