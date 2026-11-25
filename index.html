@@ -8,11 +8,11 @@
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon-192.png" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <script type="module" crossorigin src="/notes-de-frais/index-dfgX21Qs.js"></script>
+  <script type="module" crossorigin src="/notes-de-frais/index-CZaozLhX.js"></script>
   <link rel="stylesheet" crossorigin href="/notes-de-frais/index-DG_hAkIK.css">
 </head>
 <body>
-  <header class="top">
+  <header class="top" id="entete">
     <button id="mois-prec" class="icon" aria-label="Mois précédent">‹</button>
     <div class="mois">
       <div id="mois-libelle">…</div>
@@ -156,6 +156,11 @@
       <label>Clé API Claude <input name="apiKey" type="password" autocomplete="off" placeholder="sk-ant-…" /></label>
       <label>Modèle Claude <input name="model" autocomplete="off" /></label>
       <p class="petit">La clé reste sur ce téléphone. Elle sert uniquement à lire les justificatifs.</p>
+      <label class="secondaire bloc">
+        <input id="in-modele" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden />
+        Importer mon modèle Excel (avec signature)
+      </label>
+      <p class="petit" id="reg-modele">Choisis une de tes anciennes notes de frais : l'appli s'en sert comme modèle, avec ta signature.</p>
       <div class="boutons">
         <button type="button" id="reg-deconnexion" class="secondaire danger">Se déconnecter</button>
         <button type="submit" class="principal">Enregistrer</button>
