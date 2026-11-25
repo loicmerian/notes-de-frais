@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f3a5f" />
+  <title>Notes de frais</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon-192.png" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <script type="module" crossorigin src="/notes-de-frais/index-dfgX21Qs.js"></script>
+  <link rel="stylesheet" crossorigin href="/notes-de-frais/index-DG_hAkIK.css">
+</head>
+<body>
+  <header class="top">
+    <button id="mois-prec" class="icon" aria-label="Mois précédent">‹</button>
+    <div class="mois">
+      <div id="mois-libelle">…</div>
+      <div id="mois-statut" class="statut"></div>
+    </div>
+    <button id="mois-suiv" class="icon" aria-label="Mois suivant">›</button>
+    <button id="btn-reglages" class="icon" aria-label="Réglages">⚙</button>
+  </header>
+
+  <main>
+    <section id="ecran-connexion" hidden>
+      <div class="carte centre">
+        <h1>Notes de frais</h1>
+        <p>Connecte-toi avec ton compte Microsoft Elidia pour enregistrer tes justificatifs dans OneDrive.</p>
+        <button id="btn-connexion" class="principal">Se connecter</button>
+      </div>
+    </section>
+
+    <section id="ecran-mois" hidden>
+      <div class="totaux carte">
+        <div><span class="petit">Total TTC</span><strong id="total-ttc">0,00 €</strong></div>
+        <div><span class="petit">Dépenses</span><strong id="total-nb">0</strong></div>
+      </div>
+      <div id="bandeau-clos" class="bandeau" hidden></div>
+      <ul id="liste" class="liste"></ul>
+      <p id="liste-vide" class="vide" hidden>Aucune dépense pour ce mois.</p>
+      <div class="actions-mois">
+        <button id="btn-excel" class="secondaire">Télécharger l'Excel</button>
+        <button id="btn-cloturer" class="secondaire danger">Clôturer et envoyer au comptable</button>
+        <button id="btn-rouvrir" class="secondaire" hidden>Rouvrir le mois</button>
+      </div>
+    </section>
+  </main>
+
+  <nav id="barre" class="barre" hidden>
+    <label class="gros">
+      <input id="in-photo" type="file" accept="image/*" capture="environment" hidden />
+      <span>Scanner</span>
+    </label>
+    <label class="gros">
+      <input id="in-fichier" type="file" accept="application/pdf,image/*" multiple hidden />
+      <span>Importer</span>
+    </label>
+    <button id="btn-manuel" class="gros"><span>Sans justificatif</span></button>
+  </nav>
+
+  <!-- Prise de vue multi-pages -->
+  <dialog id="dlg-pages">
+    <h2>Justificatif scanné</h2>
+    <div id="pages" class="pages"></div>
+    <label class="secondaire bloc">
+      <input id="in-page" type="file" accept="image/*" capture="environment" hidden />
+      Ajouter une page
+    </label>
+    <div class="boutons">
+      <button id="pages-annuler" class="secondaire">Annuler</button>
+      <button id="pages-ok" class="principal">Continuer</button>
+    </div>
+  </dialog>
+
+  <!-- Formulaire dépense -->
+  <dialog id="dlg-depense">
+    <form id="form-depense" method="dialog">
+      <h2 id="dep-titre">Dépense</h2>
+      <div id="dep-apercu" class="apercu"></div>
+      <p id="dep-alerte" class="alerte" hidden></p>
+      <label>Date <input name="date" type="date" required /></label>
+      <label>Catégorie <select name="categorie" required></select></label>
+      <label>Fournisseur <input name="fournisseur" required autocomplete="off" /></label>
+      <label>Objet <input name="objet" autocomplete="off" placeholder="ex. déjeuner, Paris-Lyon…" /></label>
+      <div class="deux">
+        <label>Montant TTC (€) <input name="ttc" inputmode="decimal" required /></label>
+        <label>dont TVA (€) <input name="tva" inputmode="decimal" placeholder="0" /></label>
+      </div>
+      <label id="lbl-invite">Invité ou auteur <input name="invite" autocomplete="off" /></label>
+      <label id="lbl-affectation">Note de frais du mois <select name="affectation"></select></label>
+      <div class="boutons">
+        <button type="button" id="dep-supprimer" class="secondaire danger" hidden>Supprimer</button>
+        <button type="button" id="dep-annuler" class="secondaire">Annuler</button>
+        <button type="submit" class="principal">Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Saisie sans justificatif -->
+  <dialog id="dlg-manuel">
+    <h2>Sans justificatif</h2>
+    <div class="choix">
+      <button id="manuel-km" class="principal">Frais kilométriques</button>
+      <button id="manuel-autre" class="secondaire">Autre dépense (péage, etc.)</button>
+      <button id="manuel-annuler" class="secondaire">Annuler</button>
+    </div>
+  </dialog>
+
+  <dialog id="dlg-km">
+    <form id="form-km" method="dialog">
+      <h2>Frais kilométriques</h2>
+      <label>Date <input name="date" type="date" required /></label>
+      <label>Trajet / motif <input name="objet" required placeholder="ex. Toulouse, rendez-vous Mme X" /></label>
+      <div class="deux">
+        <label>Distance (km) <input name="km" inputmode="decimal" required /></label>
+        <label>Barème (€/km) <input name="taux" inputmode="decimal" required /></label>
+      </div>
+      <label class="case"><input name="ar" type="checkbox" checked /> Aller-retour</label>
+      <p class="petit" id="km-total"></p>
+      <label>Note de frais du mois <select name="affectation"></select></label>
+      <div class="boutons">
+        <button type="button" id="km-annuler" class="secondaire">Annuler</button>
+        <button type="submit" class="principal">Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Clôture -->
+  <dialog id="dlg-cloture">
+    <h2>Clôturer <span id="clo-mois"></span></h2>
+    <div id="clo-recap"></div>
+    <label>Envoyer à <input id="clo-dest" type="email" /></label>
+    <label class="case"><input id="clo-copie" type="checkbox" /> M'envoyer une copie</label>
+    <p class="petit">Le mail contiendra l'Excel rempli et un zip des justificatifs classés par date. Le mois sera ensuite verrouillé.</p>
+    <div id="clo-progression" class="progression" hidden></div>
+    <div class="boutons">
+      <button id="clo-annuler" class="secondaire">Annuler</button>
+      <button id="clo-ok" class="principal">Envoyer</button>
+    </div>
+  </dialog>
+
+  <!-- Réglages -->
+  <dialog id="dlg-reglages">
+    <form id="form-reglages" method="dialog">
+      <h2>Réglages</h2>
+      <p class="petit" id="reg-compte"></p>
+      <div class="deux">
+        <label>Prénom <input name="prenom" /></label>
+        <label>Nom <input name="nom" /></label>
+      </div>
+      <label>Société <input name="societe" /></label>
+      <label>E-mail du comptable <input name="comptable" type="email" /></label>
+      <label>Dossier OneDrive <input name="racine" /></label>
+      <label>Barème kilométrique (€/km) <input name="tauxKm" inputmode="decimal" /></label>
+      <label>Clé API Claude <input name="apiKey" type="password" autocomplete="off" placeholder="sk-ant-…" /></label>
+      <label>Modèle Claude <input name="model" autocomplete="off" /></label>
+      <p class="petit">La clé reste sur ce téléphone. Elle sert uniquement à lire les justificatifs.</p>
+      <div class="boutons">
+        <button type="button" id="reg-deconnexion" class="secondaire danger">Se déconnecter</button>
+        <button type="submit" class="principal">Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="attente" class="attente" hidden><div class="roue"></div><p id="attente-texte">Un instant…</p></div>
+  <div id="toast" class="toast" hidden></div>
+
+</body>
+</html>
